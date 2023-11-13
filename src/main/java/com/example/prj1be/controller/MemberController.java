@@ -51,7 +51,9 @@ public class MemberController {
 
     //@GetMapping 만 있어도 되더라
     @GetMapping(params = "id")
-    public void view(String id){
-        System.out.println("id = " + id);
+    public ResponseEntity<Member> view(String id){
+        Member member = service.getMember(id);
+
+        return ResponseEntity.ok(member);
     }
 }
