@@ -50,4 +50,8 @@ public class MemberService {
     public boolean deleteMember(String id) {
         return mapper.deleteById(id) == 1;
     }
+
+    public void putMember(Member member) {
+        mapper.update(member);
+    }
 }

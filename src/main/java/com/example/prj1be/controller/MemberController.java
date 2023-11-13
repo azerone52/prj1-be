@@ -70,4 +70,10 @@ public class MemberController {
         }
         return ResponseEntity.internalServerError().build();
     }
+
+    @PutMapping("edit")
+    public void put(@RequestBody Member member){
+        System.out.println("member = " + member);
+        service.putMember(member);
+    }
 }
