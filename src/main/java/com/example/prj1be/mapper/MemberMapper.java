@@ -50,9 +50,16 @@ public interface MemberMapper {
           <if test="password != ''">
           password = #{password},
           </if>
-          email = #{email}
+          email = #{email},
+          nickName = #{nickName}
         WHERE id = #{id}
         </script>
         """)
     int update(Member member);
+
+    @Select("""
+    SELECT nickName FROM member
+    WHERE nickName=#{nickName}
+    """)
+    String selectNickName(String nickName);
 }
