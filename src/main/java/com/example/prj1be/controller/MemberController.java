@@ -48,4 +48,10 @@ public class MemberController {
     public List<Member> list(){
         return service.list();
     }
+
+    //@GetMapping 만 있어도 되더라
+    @GetMapping(params = "id")
+    public void view(String id){
+        System.out.println("id = " + id);
+    }
 }
