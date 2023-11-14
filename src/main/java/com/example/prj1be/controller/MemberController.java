@@ -3,8 +3,10 @@ package com.example.prj1be.controller;
 import com.example.prj1be.domain.Member;
 import com.example.prj1be.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.List;
 
@@ -88,6 +90,18 @@ public class MemberController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("login")
+    public ResponseEntity login(@RequestBody Member member, WebRequest request){
+        if(service.login(member, request)){
+            return ResponseEntity.ok().build();
+        }else {
+            //401: 클라이언트 없을 때 오류 메세지
+            //403: 클라이언트는 있지만 권한 없을 때 오류 메세지
+//            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }
