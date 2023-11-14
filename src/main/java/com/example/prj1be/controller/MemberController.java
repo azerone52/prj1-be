@@ -73,7 +73,15 @@ public class MemberController {
     }
 
     @DeleteMapping
-    public ResponseEntity delete(String id){
+    public ResponseEntity delete(String id,
+                                 @SessionAttribute(value = "login", required = false)Member login){
+        if(login == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();//401
+        }
+        if(!service.hasAcess(id, login)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();//403
+        }
+
         // TODO: 로그인 했는지?->안했으면 401
         // TODO: 자기 정보인지?->아니면 403
 
