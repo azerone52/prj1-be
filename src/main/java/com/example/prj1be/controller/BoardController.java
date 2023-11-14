@@ -1,7 +1,9 @@
 package com.example.prj1be.controller;
 
 import com.example.prj1be.domain.Board;
+import com.example.prj1be.domain.Member;
 import com.example.prj1be.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,13 @@ public class BoardController {
     }
 
     @PutMapping("edit")
-    public ResponseEntity edit(@RequestBody Board board) {
+    public ResponseEntity edit(@RequestBody Board board, HttpSession session) {
+        Object login = session.getAttribute("login");
+        Member loginMember = (Member) login;
+
+        System.out.println("login = " + login);
+        System.out.println("loginMember = " + loginMember);
+
         if (service.validate(board)) {
             if (service.update(board)) {
                 return ResponseEntity.ok().build();
