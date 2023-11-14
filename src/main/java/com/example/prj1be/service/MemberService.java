@@ -92,6 +92,21 @@ public class MemberService {
     }
 
     public boolean hasAcess(String id, Member login) {
+        if (isAdmin(login)) {
+            return true;
+        }
         return login.getId().equals(id);
+    }
+
+    public boolean isAdmin(Member login){
+        if(login.getAuth() != null){
+            //하나라도 admin이 있다면 true
+            return login.getAuth()
+                    .stream()
+                    .map(e->e.getName())
+                    .anyMatch(n->n.equals("admin"));
+        }
+
+        return false;
     }
 }
