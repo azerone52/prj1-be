@@ -43,4 +43,8 @@ public class CommentService {
 
         return comment.getMemberId().equals(login.getId());
     }
+
+    public boolean updateById(Integer id, String fixedComment) {
+        return mapper.updateById(id, fixedComment) == 1;
+    }
 }
