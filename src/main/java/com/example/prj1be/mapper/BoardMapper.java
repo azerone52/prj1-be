@@ -3,6 +3,7 @@ package com.example.prj1be.mapper;
 import com.example.prj1be.domain.Board;
 import org.apache.ibatis.annotations.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Mapper
@@ -33,7 +34,7 @@ public interface BoardMapper {
     DELETE FROM board
     WHERE id = #{id}
     """)
-    int deleteById(Integer id);
+    int deleteById(Integer id) throws SQLIntegrityConstraintViolationException;
 
     @Update("""
     UPDATE board
@@ -49,4 +50,10 @@ public interface BoardMapper {
     WHERE writer=#{writer}
     """)
     int deleteByWriter(String writer);
+
+    @Delete("""
+    DELETE FROM comment
+    WHERE boardId = #{id}
+    """)
+    void deleteCommentById(Integer id);
 }

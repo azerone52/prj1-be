@@ -4,8 +4,10 @@ import com.example.prj1be.domain.Board;
 import com.example.prj1be.domain.Member;
 import com.example.prj1be.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -42,7 +44,20 @@ public class BoardService {
     }
 
     public boolean remove(Integer id) {
-        return mapper.deleteById(id)==1;
+        while (true){
+            try{
+                if(mapper.deleteById(id)==1){
+                    return true;
+                }
+            }catch (SQLIntegrityConstraintViolationException e){
+//                mapper.deleteCommentById(id);
+            }catch(DataIntegrityViolationException e){
+                mapper.deleteCommentById(id);
+            } catch (Exception e){
+                break;
+            }
+        }
+        return false;
     }
 
     public boolean update(Board board) {
