@@ -49,8 +49,17 @@ public class BoardService {
         endPageNumber = Math.min(endPageNumber, lastPageNumber);
         int from = (page-1)*10;
 
+        int prevPageNumber = startPageNumber - 10;
+        int nextPageNumber = endPageNumber + 1;
+
         pageInfo.put("startPageNumber", startPageNumber);
         pageInfo.put("endPageNumber", endPageNumber);
+        if(prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+        if(nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
 
         map.put("boardList", mapper.selectAll(from));
         map.put("pageInfo", pageInfo);
