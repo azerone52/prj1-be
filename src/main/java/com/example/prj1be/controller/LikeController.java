@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/Like")
+@RequestMapping("/api/like")
 public class LikeController {
     private final LikeService service;
 
