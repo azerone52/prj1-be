@@ -26,6 +26,8 @@ public class BoardService {
     private final FileMapper fileMapper;
 
     public boolean save(Board board, MultipartFile[] files, Member login) throws IOException {
+        board.setWriter(login.getId());
+
         int cnt = mapper.insert(board);
 
         // boardFile 테이블에 files 정보 저장
