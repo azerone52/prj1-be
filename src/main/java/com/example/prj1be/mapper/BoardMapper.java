@@ -16,10 +16,12 @@ public interface BoardMapper {
 
     @Select("""
    SELECT b.id, b.title, b.writer, m.nickName, b.inserted, 
-          COUNT(DISTINCT c.id) countComment, COUNT(DISTINCT bl.id) countLike 
+          COUNT(DISTINCT c.id) countComment, COUNT(DISTINCT bl.id) countLike,
+          COUNT(DISTINCT f.id) countFile
    FROM board b JOIN member m ON b.writer = m.id
                LEFT JOIN comment c on b.id = c.boardId
                LEFT JOIN boardlike bl ON b.id = bl.boardId
+               LEFT JOIN boardfile f ON b.id = f.boardId
    WHERE b.content LIKE #{keyword}
        OR b.title LIKE #{keyword}
    GROUP BY b.id
