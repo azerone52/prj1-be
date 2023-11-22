@@ -69,7 +69,7 @@ public class BoardController {
     public ResponseEntity edit(Board board,
                                @RequestParam(value = "removeFileIds[]", required = false) List<Integer> removeFileIds,
                                @RequestParam(value = "uploadFiles[]", required = false) MultipartFile[] uploadFiles,
-                               @SessionAttribute(value = "login", required = false)Member login) {
+                               @SessionAttribute(value = "login", required = false)Member login) throws IOException {
 
 
         if(login == null){
