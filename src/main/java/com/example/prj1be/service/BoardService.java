@@ -7,9 +7,14 @@ import com.example.prj1be.mapper.CommentMapper;
 import com.example.prj1be.mapper.FileMapper;
 import com.example.prj1be.mapper.LikeMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +30,11 @@ public class BoardService {
     private final LikeMapper likeMapper;
     private final FileMapper fileMapper;
 
+    private final S3Client s3;
+
+    @Value("${aw3.s3.bucket.name}")
+    private String bucket;
+
     public boolean save(Board board, MultipartFile[] files, Member login) throws IOException {
         board.setWriter(login.getId());
 
@@ -35,29 +45,26 @@ public class BoardService {
             for (int i = 0; i < files.length; i++) {
                 // boardId, name
                 fileMapper.insert(board.getId(), files[i].getOriginalFilename());
-                // 일단 local에 저장
+                // 실제 파일을 S3 bucket에 upload
                 upload(board.getId(), files[i]);
             }
         }
 
-        // 실제 파일을 S3 bucket에 upload
+
 
         return cnt == 1;
     }
 
     private void upload(Integer boardId, MultipartFile file) throws IOException{
-        // 파일 저장 경로
-        // C:\Temp\prj1\게시물번호\파일명
+        String key = "prj1/" + boardId + "/" + file.getOriginalFilename();
 
-        File folder = new File("C:\\Temp\\prj1\\" + boardId);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
 
-        String path = folder.getAbsolutePath() + "\\" + file.getOriginalFilename();
-        File des = new File(path);
-        file.transferTo(des);
-
+        s3.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
     }
 
     public boolean validate(Board board) {
